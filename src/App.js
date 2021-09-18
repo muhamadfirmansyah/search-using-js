@@ -25,6 +25,8 @@ export default function App() {
 
   const [search, setSearch] = useState("");
 
+  const [isForm, setIsForm] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -40,32 +42,61 @@ export default function App() {
     setData(newArray);
   };
 
+  const [name, setName] = useState("");
+
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    setData([...data, { id: data.length + 1, name: name }]);
+
+    setIsForm(false);
+  };
+
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <input
-          name="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {isForm ? (
+        <form onSubmit={handleSave}>
+          <div>
+            <label>Name</label>
+            <input
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <button onClick={() => setIsForm(!isForm)}>tambah</button>
+          <form onSubmit={handleSubmit}>
+            <input
+              name="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button type="submit">Search</button>
+          </form>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }
